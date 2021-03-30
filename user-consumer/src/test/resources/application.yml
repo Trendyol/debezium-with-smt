@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: user-consumer
+  profiles:
+    active: test
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:test;MODE=PostgreSQL
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      auto-offset-reset: earliest
+      topic: debezium.customer-connector.public.customer
+      group-id: debezium-with-postgres
+      enable: true
+    producer:
+      bootstrap-servers: localhost:9092
+      error-topic: debezium.customer-connector.public.customer.error
+
+  liquibase:
+    enabled: false

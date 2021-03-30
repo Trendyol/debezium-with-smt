@@ -1,0 +1,69 @@
+version: '3.7'
+services:
+  source_db:
+    image: postgres:11.1-alpine
+    environment:
+      - POSTGRES_USER=debezium
+      - POSTGRES_PASSWORD=123qwe
+      - POSTGRES_DB=customer
+    ports:
+      - 5432:5432
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+    container_name: source_db
+
+  target_db:
+    image: postgres:11.1-alpine
+    environment:
+      - POSTGRES_USER=debezium
+      - POSTGRES_PASSWORD=123qwe
+      - POSTGRES_DB=user
+    ports:
+      - 5433:5432
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+    container_name: target_db
+
+  zookeeper:
+    container_name: zookeeper
+    image: debezium/zookeeper:1.1
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+
+  kafka:
+    container_name: kafka
+    image: debezium/kafka:1.1
+    ports:
+      - 9092:9092
+    links:
+      - zookeeper
+    environment:
+      - ZOOKEEPER_CONNECT=zookeeper:2181
+      - ADVERTISED_HOST_NAME=192.168.1.6 # 192.168.1.7
+
+  connect:
+    container_name: debezium
+    image: debezium/connect:1.3
+    ports:
+      - 8083:8083
+    links:
+      - kafka
+      - source_db
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - CONFIG_STORAGE_TOPIC=debezium_connect_config
+      - OFFSET_STORAGE_TOPIC=debezium_connect_offset
+      - STATUS_STORAGE_TOPIC=debezium_connect_status
+      - GROUP_ID=settlement-debezium-connect
+      - CONNECT_PRODUCER_MAX_REQUEST_SIZE=3145728
+    volumes:
+      - $PWD/jars/debezium-scripting-1.4.0.Alpha2.jar:/kafka/connect/debezium-connector-postgres/debezium-scripting-1.4.0.Alpha2.jar
+      - $PWD/jars/groovy-3.0.6.jar:/kafka/connect/debezium-connector-postgres/groovy-3.0.6.jar
+      - $PWD/jars/groovy-json-3.0.6.jar:/kafka/connect/debezium-connector-postgres/groovy-json-3.0.6.jar
+      - $PWD/jars/groovy-jsr223-3.0.6.jar:/kafka/connect/debezium-connector-postgres/groovy-jsr223-3.0.6.jar

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+
+    <changeSet id="2020-12-18 22.00" author="okan.betul">
+
+        <createTable tableName="users">
+            <column name="id" type="int8">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_modified_date" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="surname" type="varchar(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="varchar(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="birthday" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

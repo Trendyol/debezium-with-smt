@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: @project.name@
+    description: @project.description@
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:postgresql://localhost:5433/user
+    username: debezium
+    password: 123qwe
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    database: postgresql
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      auto-offset-reset: earliest
+      topic: debezium.public.customers
+      group-id: debezium-with-postgres
+      enable: true
+    producer:
+      bootstrap-servers: localhost:9092
+      error-topic: debezium.public.customer.error
+server:
+  port: 8081

@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: @project.name@
+    description: @project.description@
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:postgresql://localhost:5432/customer
+    username: debezium
+    password: 123qwe
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    database: postgresql
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml

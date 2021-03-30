@@ -1,0 +1,13 @@
+
+bin/kafka-topics.sh --list --bootstrap-server 0.0.0.0:9092
+
+bin/kafka-topics.sh --create --bootstrap-server 0.0.0.0:9092  --partitions 1 --replication-factor 1 --topic debezium_connect_config --config retention.ms=-1
+bin/kafka-topics.sh --create --bootstrap-server 0.0.0.0:9092 --replication-factor 1 --partitions 25 --topic debezium_connect_offset --config retention.ms=-1
+bin/kafka-topics.sh --create --bootstrap-server 0.0.0.0:9092 --replication-factor 1 --partitions 5 --topic debezium_connect_status --config retention.ms=-1
+
+
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic debezium.public.customers | jq
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic debezium.initial-snapshot.public.customers | jq
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic debezium.smt.public.customers | jq
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic debezium.smt-topic.public.customers | jq
+

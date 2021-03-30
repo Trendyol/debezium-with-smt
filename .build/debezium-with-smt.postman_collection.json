@@ -1,0 +1,234 @@
+{
+	"info": {
+		"_postman_id": "9a0f9407-8c23-4efa-9833-a2cbe6fd56f5",
+		"name": "debezium-with-smt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8083/connectors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/connectors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Base Connector",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n\"name\": \"customer-connector\",\n\"config\": { \n\t\"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\", \n\t\"tasks.max\": \"1\", \n\t\"group.id\": \"debezium-with-postgres\",\n\t\"database.hostname\": \"192.168.1.6\", \n\t\"database.port\": \"5432\", \n\t\"database.user\": \"debezium\", \n\t\"database.password\": \"123qwe\", \n\t\"database.dbname\" : \"customer\",\n\t\"database.server.name\": \"debezium\", \n\t\"database.whitelist\": \"public\", \n\t\"table.include.list\": \"public.customers\",\n\t\"heartbeat.interval.ms\": \"1000\",\n\t\"slot.name\": \"debezium_customer\",\n\t\"database.history.kafka.bootstrap.servers\": \"192.168.1.6:9092\",\n\t\"key.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\n\t\"key.converter.schemas.enable\": \"false\",\n\t\"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\n\t\"value.converter.schemas.enable\": \"false\",\n\t\"plugin.name\":\"pgoutput\"\n\t} \n}\n// use your local ip instead of localhost"
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Base Connector For Tombstone",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n\t\"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\", \n\t\"tasks.max\": \"1\", \n\t\"group.id\": \"debezium-with-postgres\",\n\t\"database.hostname\": \"192.168.1.7\", \n\t\"database.port\": \"5432\", \n\t\"database.user\": \"debezium\", \n\t\"database.password\": \"123qwe\", \n\t\"database.dbname\" : \"customer\",\n\t\"database.server.name\": \"debezium\", \n\t\"database.whitelist\": \"public\", \n\t\"table.include.list\": \"public.customers\",\n\t\"heartbeat.interval.ms\": \"1000\",\n\t\"slot.name\": \"debezium_customer\",\n\t\"database.history.kafka.bootstrap.servers\": \"192.168.1.7:9092\",\n\t\"key.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\n\t\"key.converter.schemas.enable\": \"false\",\n\t\"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\n\t\"value.converter.schemas.enable\": \"false\",\n\t\"plugin.name\":\"pgoutput\",\n    \"tombstones.on.delete\": \"false\"\n} \n\n// use your local ip instead of localhost"
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors/customer-connector/config",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"customer-connector",
+						"config"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Base Connector For Column Black List",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n\t\"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\", \n\t\"tasks.max\": \"1\", \n\t\"group.id\": \"debezium-with-postgres\",\n\t\"database.hostname\": \"192.168.1.7\", \n\t\"database.port\": \"5432\", \n\t\"database.user\": \"debezium\", \n\t\"database.password\": \"123qwe\", \n\t\"database.dbname\" : \"customer\",\n\t\"database.server.name\": \"debezium\", \n\t\"database.whitelist\": \"public\", \n\t\"table.include.list\": \"public.customers\",\n\t\"heartbeat.interval.ms\": \"1000\",\n\t\"slot.name\": \"debezium_customer\",\n\t\"database.history.kafka.bootstrap.servers\": \"192.168.1.7:9092\",\n\t\"key.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\n\t\"key.converter.schemas.enable\": \"false\",\n\t\"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\n\t\"value.converter.schemas.enable\": \"false\",\n\t\"plugin.name\":\"pgoutput\",\n    \"tombstones.on.delete\": \"false\"\n} \n\n// use your local ip instead of localhost"
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors/customer-connector/config",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"customer-connector",
+						"config"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Connector For Initial Snapshot Filter",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"customer-connector-inital-snapshot\",\n    \"config\": {\n        \"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\",\n        \"tasks.max\": \"1\",\n        \"group.id\": \"debezium-with-postgres\",\n        \"database.hostname\": \"192.168.1.7\",\n        \"database.port\": \"5432\",\n        \"database.user\": \"debezium\",\n        \"database.password\": \"123qwe\",\n        \"database.dbname\": \"customer\",\n        \"database.server.name\": \"debezium.initial-snapshot\",\n        \"database.whitelist\": \"public\",\n        \"table.include.list\": \"public.customers\",\n        \"heartbeat.interval.ms\": \"1000\",\n        \"slot.name\": \"debezium_customer_initial_snapshot\",\n        \"database.history.kafka.bootstrap.servers\": \"192.168.1.7:9092\",\n        \"key.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\n        \"key.converter.schemas.enable\": \"false\",\n        \"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\n        \"value.converter.schemas.enable\": \"false\",\n        \"plugin.name\": \"pgoutput\",\n        \"tombstones.on.delete\": \"false\",\n        \"column.blacklist\": \"public.customers.created_date, public.customers.last_modified_date\",\n        \"snapshot.select.statement.overrides\": \"public.customers\",\n        \"snapshot.select.statement.overrides.public.customers\": \"select * from public.customers where birthday > '1980-01-01 00:00:00'\"\n    }\n}\n// use your local ip instead of localhost"
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Connector For SMT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"customer-connector-smt\",\n    \"config\": {\n        \"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\",\n        \"tasks.max\": \"1\",\n        \"group.id\": \"debezium-with-postgres\",\n        \"database.hostname\": \"192.168.1.6\",\n        \"database.port\": \"5432\",\n        \"database.user\": \"debezium\",\n        \"database.password\": \"123qwe\",\n        \"database.dbname\": \"customer\",\n        \"database.server.name\": \"debezium.smt\",\n        \"database.whitelist\": \"public\",\n        \"table.include.list\": \"public.customers\",\n        \"heartbeat.interval.ms\": \"1000\",\n        \"slot.name\": \"debezium_customer_smt\",\n        \"database.history.kafka.bootstrap.servers\": \"192.168.1.6:9092\",\n        \"key.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\n        \"key.converter.schemas.enable\": \"false\",\n        \"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\n        \"value.converter.schemas.enable\": \"false\",\n        \"plugin.name\": \"pgoutput\",\n        \"tombstones.on.delete\": \"false\",\n        \"column.blacklist\": \"public.customers.created_date, public.customers.last_modified_date\",\n        \"transforms\": \"filter\",\n        \"transforms.filter.type\": \"io.debezium.transforms.Filter\",\n        \"transforms.filter.language\": \"jsr223.groovy\",\n        \"transforms.filter.condition\": \"value.op == 'u' && value.before.active == false && value.after.active == true\",\n        \"transforms.filter.topic.regex\": \"debezium.smt.public.customers\"\n    }\n}\n// use your local ip instead of localhost"
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Connector For SMT Topic Filter",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"customer-connector-smt-without-topic-filter\",\n    \"config\": {\n        \"connector.class\": \"io.debezium.connector.postgresql.PostgresConnector\",\n        \"tasks.max\": \"1\",\n        \"group.id\": \"debezium-with-postgres\",\n        \"database.hostname\": \"192.168.1.6\",\n        \"database.port\": \"5432\",\n        \"database.user\": \"debezium\",\n        \"database.password\": \"123qwe\",\n        \"database.dbname\": \"customer\",\n        \"database.server.name\": \"debezium.smt-topic\",\n        \"database.whitelist\": \"public\",\n        \"table.include.list\": \"public.customers\",\n        \"heartbeat.interval.ms\": \"1000\",\n        \"slot.name\": \"debezium_customer_smt_topic\",\n        \"database.history.kafka.bootstrap.servers\": \"192.168.1.6:9092\",\n        \"key.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\n        \"key.converter.schemas.enable\": \"false\",\n        \"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\n        \"value.converter.schemas.enable\": \"false\",\n        \"plugin.name\": \"pgoutput\",\n        \"tombstones.on.delete\": \"false\",\n        \"column.blacklist\": \"public.customers.created_date, public.customers.last_modified_date\",\n        \"transforms\": \"filter\",\n        \"transforms.filter.type\": \"io.debezium.transforms.Filter\",\n        \"transforms.filter.language\": \"jsr223.groovy\",\n        \"transforms.filter.condition\": \"value.op == 'u' && value.before.active == false && value.after.active == true\"\n    }\n}\n// use your local ip instead of localhost"
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Connector Task Status For SMT Topic Filter",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8083/connectors/customer-connector-smt-without-topic-filter/status",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"customer-connector-smt-without-topic-filter",
+						"status"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

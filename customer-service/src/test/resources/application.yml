@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: customer-service
+  profiles:
+    active: test
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:test;MODE=PostgreSQL
+
+  liquibase:
+    enabled: false
